@@ -50,4 +50,29 @@ public interface CustomerDao {
     @Insert("insert into auth_customer_role(customer_id,role_id)" +
             " values(#{customerId},#{roleId})")
     int addRole(@Param("customerId") int customerId,@Param("roleId") int roleId);
+
+
+    /**
+     * @description 更新交易密码
+     * @author zhou
+     * @created  2018/12/27 14:26    
+     * @param nickName
+     * @param dealPassword
+     * @param dealSalt
+     * @return 
+     */
+    @Update("update customer set deal_password = #{dealPassword}," +
+            " deal_salt = #{dealSalt} where nick_name = #{nickName}")
+    int updateDealPassword(@Param("nickName") String nickName,
+                           @Param("dealPassword") String dealPassword,
+                           @Param("dealSalt") String dealSalt);
+
+    /**
+     * @description 编辑顾客
+     * @author zhou
+     * @created  2018/12/27 14:44
+     * @param 
+     * @return 
+     */
+    int editCustomer(Customer customer);
 }

@@ -24,8 +24,31 @@ public interface CustomerService {
      */
     WebResponse customerSign(Customer customer);
 
-
-
-
+    /**
+     * @description 根据昵称查顾客
+     * @author zhou
+     * @created  2018/12/27 10:39    
+     * @param 
+     * @return 
+     */
     Customer findByNickName(String nickName);
+
+    /**
+     * @description 增加交易密码
+     * @author zhou
+     * @created  2018/12/27 10:49
+     * @param
+     * @param reDealPassword
+     * @return
+     */
+    WebResponse addDealPassword(String nickName, String dealPassword, String reDealPassword);
+
+    /**
+     * @description 编辑顾客
+     * @author zhou
+     * @created  2018/12/27 13:58    
+     * @param customer
+     * @return 
+     */
+    WebResponse editCustomer(Customer customer);
 }

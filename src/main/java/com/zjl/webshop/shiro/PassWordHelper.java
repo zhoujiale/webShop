@@ -51,4 +51,17 @@ public class PassWordHelper {
         return customer;
     }
 
+    /**
+     * @description 交易密码
+     * @author zhou
+     * @created  2018/12/27 11:10    
+     * @param 
+     * @return 
+     */
+    public String createPassword(String Password,String Salt){
+        String newPassword = new SimpleHash(algorithmName,Password,ByteSource.Util.bytes(Salt),
+                hashIterations).toHex();
+        return newPassword;
+    }
+
 }

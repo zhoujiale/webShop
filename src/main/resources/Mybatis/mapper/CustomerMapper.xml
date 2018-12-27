@@ -30,4 +30,13 @@
         SELECT nick_name,password,salt,deal_password,deal_salt,phone,email,address,create_time,status
          from customer where nick_name = #{nickName}
     </select>
+
+    <!--编辑顾客-->
+    <update id="editCustomer" parameterType="Customer">
+        UPDATE customer
+        SET
+            password = #{password},salt = #{salt},
+            phone = #{phone},address = #{address},
+            email = #{email}
+    </update>
 </mapper>

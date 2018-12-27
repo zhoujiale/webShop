@@ -13,6 +13,7 @@ import com.zjl.webshop.utils.StringUtil;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class CustomerController {
     }
 
     /**
-     * @description 登陆
+     * @description 登录
      * @author zhou
      * @created  2018/12/24 18:19    
      * @param 
@@ -158,16 +159,53 @@ public class CustomerController {
      * @description 添加交易密码
      * @author zhou
      * @created  2018/12/27 9:58    
+     * @param nickName 昵称
+     * @param dealPassword 交易密码
+     * @param reDealPassword 重复交易密码
+     * @return 
+     */
+    @RequestMapping(value = "/addDealPassword")
+    @RequiresRoles("customer")
+    public WebResponse addDealPassword(String nickName,String dealPassword,String reDealPassword){
+        if(StringUtil.isEmpty(nickName)||StringUtil.isEmpty(dealPassword)||StringUtil.isEmpty(reDealPassword)){
+            log.error("参数错误");
+            return new WebResponse().error(400,"","参数错误");
+        }
+        if(StringUtil.isDealPassword(dealPassword)){
+            log.error("交易密码格式错误");
+            return new WebResponse().error(401,"","交易密码格式错误");
+        }
+        WebResponse webResponse = customerService.addDealPassword(nickName,dealPassword,reDealPassword);
+        return webResponse;
+    }
+
+    /**
+     * @description 编辑个人资料
+     * @author zhou
+     * @created  2018/12/27 13:50    
      * @param 
      * @return 
      */
-    @RequestMapping()
-    public WebResponse addDealPassword(String nickName,String dealPassword){
-        if(StringUtil.isEmpty(nickName)||StringUtil.isEmpty(dealPassword)){
-            log.error("参数错误");
-            return new WebResponse().error(400,"","");
-        }
-
-        return null;
+    @RequestMapping(value = "/editCustomer",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public WebResponse editCustomer(@RequestBody Customer customer){
+         if(StringUtil.isEmpty(customer.getPassword())||StringUtil.isEmpty(customer.getPhone())||StringUtil.
+                 isEmpty(customer.getEmail())||StringUtil.isEmpty(customer.getAddress())){
+             log.error("参数错误");
+             return new WebResponse().error(400,"","参数错误");
+         }
+         if(StringUtil.isPhone(customer.getPhone())){
+             log.error("手机号错误");
+             return new WebResponse().error(401,"","手机号错误");
+         }
+         if(StringUtil.isEmail(customer.getEmail())){
+             log.error("邮箱错误");
+             return new WebResponse().error(402,"","邮箱错误");
+         }
+         if(StringUtil.isPassword(customer.getPassword())){
+            log.error("登录密码错误");
+            return new WebResponse().error(403,"","登录密码错误");
+         }
+         WebResponse webResponse = customerService.editCustomer(customer);
+         return webResponse;
     }
 }

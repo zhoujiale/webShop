@@ -22,7 +22,7 @@ public class WebResponse {
     /**信息*/
     private String msg;
 
-    public WebResponse ok(Object data){
+    public  WebResponse ok(Object data){
         this.code = 200;
         this.data = data;
         this.msg = "请求成功";

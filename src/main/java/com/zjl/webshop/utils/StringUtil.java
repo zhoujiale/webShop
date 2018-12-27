@@ -45,7 +45,7 @@ public class StringUtil {
      */
     public static boolean isPassword(String password){
         /**必须包含大小写字母和数字的组合，可以使用特殊字符*/
-        String reg = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$";
+        String reg = "^(?=.*\\d)(?=.*[a-zA-Z]).{6,16}$";
         if(password.matches(reg)){
            return false;
         }
@@ -113,4 +113,5 @@ public class StringUtil {
         }
         return true;
     }
+
 }
