@@ -186,6 +186,7 @@ public class CustomerController {
      * @param 
      * @return 
      */
+    @RequiresRoles("customer")
     @RequestMapping(value = "/editCustomer",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public WebResponse editCustomer(@RequestBody Customer customer){
          if(StringUtil.isEmpty(customer.getPassword())||StringUtil.isEmpty(customer.getPhone())||StringUtil.

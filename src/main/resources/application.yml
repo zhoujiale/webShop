@@ -29,12 +29,25 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: UTC
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 1
+        min-idle: 100
+    timeout: 10000
 logging:
   level:
     root: info
     com.zjl.webshop: debug
     org.springfromework.web: debug
     org.hibernate: error
+  config: classpath:logback-spring.xml
 mybatis:
   type-aliases-package: com.zjl.webshop.entity
   config-location: classpath:Mybatis/mybatis-config.xml

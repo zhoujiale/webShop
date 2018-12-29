@@ -5,10 +5,13 @@ package com.zjl.webshop.shiro;/**
  */
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -38,7 +41,8 @@ public class ShiroConfig {
          shiroFilterFactoryBean.setSecurityManager(securityManager);
          //拦截器
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
-        filterChainDefinitionMap.put("/customer/**","anon");
+        filterChainDefinitionMap.put("/customer/sigin","anon");
+        filterChainDefinitionMap.put("/customer/login","anon");
         filterChainDefinitionMap.put("/**","authc");
         shiroFilterFactoryBean.setUnauthorizedUrl("/index.jsp");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -60,7 +64,7 @@ public class ShiroConfig {
     }
 
     /**
-     * @description Realm
+     * @description 自定义Realm
      * @author zhou
      * @created  2018/12/20 14:16    
      * @param 
@@ -100,5 +104,34 @@ public class ShiroConfig {
         hashedCredentialsMatcher.setHashIterations(2);
         hashedCredentialsMatcher.setHashAlgorithmName("md5");
         return hashedCredentialsMatcher;
+    }
+
+    /**
+     * @description RememberMe
+     * @author zhou
+     * @created  2018/12/27 17:32    
+     * @param 
+     * @return 
+     */
+    @Bean
+    public CookieRememberMeManager cookieRememberMeManager(){
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(simpleCookie());
+        cookieRememberMeManager.setCipherKey(Base64.decode("4AvVhmFLUs0KTA3Kprsdag=="));
+        return cookieRememberMeManager;
+    }
+
+    /**
+     * @description cookie
+     * @author zhou
+     * @created  2018/12/27 17:26    
+     * @param 
+     * @return 
+     */
+    @Bean
+    public SimpleCookie simpleCookie(){
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        simpleCookie.setMaxAge(36000);
+        return simpleCookie;
     }
 }
