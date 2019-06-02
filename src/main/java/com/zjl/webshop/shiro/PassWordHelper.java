@@ -5,10 +5,12 @@ package com.zjl.webshop.shiro;/**
  */
 
 import com.zjl.webshop.entity.Customer;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,29 +26,15 @@ public class PassWordHelper {
 
     private RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
 
-    @Value("MD5")
-    private  String algorithmName;
-    @Value("2")
-    private int hashIterations;
-
-    public void setRandomNumberGenerator(RandomNumberGenerator randomNumberGenerator){
-        this.randomNumberGenerator = randomNumberGenerator;
-    }
-
-    public void setAlgorithmName(String algorithmName){
-       this.algorithmName = algorithmName;
-    }
-
-    public void setHashIterations(int hashIterations){
-       this.hashIterations = hashIterations;
-    }
+    @Autowired
+    private HashedCredentialsMatcher hashedCredentialsMatcher;
 
     public Customer encryptPassword(Customer customer){
         if(customer.getSalt() == null || "".equals(customer.getSalt())){
              customer.setSalt(randomNumberGenerator.nextBytes().toHex());
         }
-        String newPassword = new SimpleHash(algorithmName,customer.getPassword(),
-                ByteSource.Util.bytes(customer.getSalt()),hashIterations).toHex();
+        String newPassword = new SimpleHash(hashedCredentialsMatcher.getHashAlgorithmName(),customer.getPassword(),
+                ByteSource.Util.bytes(customer.getSalt()),hashedCredentialsMatcher.getHashIterations()).toHex();
         customer.setPassword(newPassword);
         return customer;
     }
@@ -59,8 +47,9 @@ public class PassWordHelper {
      * @return 
      */
     public String createPassword(String Password,String Salt){
-        String newPassword = new SimpleHash(algorithmName,Password,ByteSource.Util.bytes(Salt),
-                hashIterations).toHex();
+        String newPassword = new SimpleHash(hashedCredentialsMatcher.getHashAlgorithmName(),
+                Password,ByteSource.Util.bytes(Salt),
+                hashedCredentialsMatcher.getHashIterations()).toHex();
         return newPassword;
     }
 
